@@ -28,26 +28,18 @@ function TransactionDashboard() {
 
 			fetch(url, {
 				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
+				headers: { "Content-Type": "application/json" },
 			})
 				.then((response) => {
-					if (!response.ok) {
-						throw new Error("Failed to fetch transactions");
-					}
+					if (!response.ok) throw new Error("Failed to fetch transactions");
 					return response.json();
 				})
-				.then((data) => {
-					setTransactions(data.transactions);
-				})
-				.catch((error) => {
-					console.error("Error fetching transactions:", error);
-				});
+				.then((data) => setTransactions(data.transactions))
+				.catch((error) => console.error("Error fetching transactions:", error));
 		};
 
 		fetchTransactions();
-	}, [month, searchText, page, perPage]);
+	}, [month, searchText, page]);
 
 	const handleSearchChange = (event) => {
 		setSearchText(event.target.value);
@@ -60,19 +52,46 @@ function TransactionDashboard() {
 	};
 
 	return (
-		<div style={{ textAlign: "center", padding: "20px" }}>
-			<h1>Transaction Dashboard</h1>
+		<div
+			style={{
+				textAlign: "center",
+				padding: "40px",
+				backgroundColor: "#F2FAFB",
+			}}>
+			<h2
+				style={{
+					fontSize: "1.5rem",
+					color: "#333",
+					border: "3px solid #333",
+					borderRadius: "50%",
+					width: "180px",
+					height: "180px",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+					margin: "0 auto",
+					backgroundColor: "#fff",
+				}}>
+				Transaction Dashboard
+			</h2>
 
-			<div style={{ marginBottom: "20px" }}>
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-around",
+					marginBottom: "20px",
+					margin: "20px",
+				}}>
 				<input
 					type="text"
 					placeholder="Search transaction"
 					value={searchText}
 					onChange={handleSearchChange}
 					style={{
-						padding: "10px",
-						borderRadius: "5px",
-						marginRight: "10px",
+						padding: "10px 20px",
+						borderRadius: "8px",
+						border: "1px solid #CCC",
+						marginRight: "15px",
 						fontSize: "16px",
 					}}
 				/>
@@ -81,9 +100,12 @@ function TransactionDashboard() {
 					value={month}
 					onChange={handleMonthChange}
 					style={{
-						padding: "10px",
-						borderRadius: "5px",
+						padding: "10px 20px",
+						borderRadius: "8px",
+						border: "1px solid #CCC",
 						fontSize: "16px",
+						backgroundColor: "#F9DF85",
+						color: "#333",
 					}}>
 					{months.map((m) => (
 						<option key={m} value={m}>
@@ -96,42 +118,48 @@ function TransactionDashboard() {
 			<table
 				style={{
 					width: "100%",
-					marginBottom: "20px",
 					borderCollapse: "collapse",
+					backgroundColor: "#F9DF85",
+					borderRadius: "8px",
+					overflow: "hidden",
+					marginBottom: "20px",
 				}}>
 				<thead>
 					<tr>
-						<th>ID</th>
-						<th>Title</th>
-						<th>Description</th>
-						<th>Price</th>
-						<th>Category</th>
-						<th>Sold</th>
-						<th>Image</th>
+						<th style={headerCellStyle}>ID</th>
+						<th style={headerCellStyle}>Title</th>
+						<th style={headerCellStyle}>Description</th>
+						<th style={headerCellStyle}>Price</th>
+						<th style={headerCellStyle}>Category</th>
+						<th style={headerCellStyle}>Sold</th>
+						<th style={headerCellStyle}>Image</th>
 					</tr>
 				</thead>
 				<tbody>
 					{transactions.length > 0 ? (
 						transactions.map((transaction) => (
-							<tr key={transaction.id}>
-								<td>{transaction.id}</td>
-								<td>{transaction.title}</td>
-								<td>{transaction.description}</td>
-								<td>{transaction.price}</td>
-								<td>{transaction.category}</td>
-								<td>{transaction.sold ? "Yes" : "No"}</td>
-								<td>
+							<tr key={transaction.id} style={rowStyle}>
+								<td style={cellStyle}>{transaction.id}</td>
+								<td style={cellStyle}>{transaction.title}</td>
+								<td style={cellStyle}>{transaction.description}</td>
+								<td style={cellStyle}>${transaction.price}</td>
+								<td style={cellStyle}>{transaction.category}</td>
+								<td style={cellStyle}>{transaction.sold ? "Yes" : "No"}</td>
+								<td style={cellStyle}>
 									<img
 										src={transaction.image}
 										alt={transaction.title}
 										width="50"
+										style={{ borderRadius: "5px" }}
 									/>
 								</td>
 							</tr>
 						))
 					) : (
 						<tr>
-							<td colSpan="7">No transactions found</td>
+							<td colSpan="7" style={cellStyle}>
+								No transactions found
+							</td>
 						</tr>
 					)}
 				</tbody>
@@ -140,32 +168,67 @@ function TransactionDashboard() {
 			<div
 				style={{
 					display: "flex",
-					justifyContent: "space-between",
 					alignItems: "center",
+					justifyContent: "space-between",
+					width: "80%",
+					margin: "0 auto",
+					fontSize: "16px",
 				}}>
-				<button
-					onClick={() => setPage(page - 1)}
-					disabled={page === 1}
-					style={{
-						padding: "10px 20px",
-						fontSize: "16px",
-						cursor: page === 1 ? "not-allowed" : "pointer",
-					}}>
-					Previous
-				</button>
-				<span>Page No: {page}</span>
-				<button
-					onClick={() => setPage(page + 1)}
-					style={{
-						padding: "10px 20px",
-						fontSize: "16px",
-					}}>
-					Next
-				</button>
-				<span>Per Page: {perPage}</span>
+				<span style={{ fontSize: "16px" }}>Page No: {page}</span>
+
+				<div style={{ display: "flex", alignItems: "center" }}>
+					<button
+						onClick={() => setPage(page - 1)}
+						disabled={page === 1}
+						style={{
+							padding: "10px 20px",
+							margin: "0 10px",
+							fontSize: "16px",
+							cursor: page === 1 ? "not-allowed" : "pointer",
+							backgroundColor: "#F9DF85",
+							border: "none",
+							borderRadius: "5px",
+						}}>
+						Previous
+					</button>
+
+					<button
+						onClick={() => setPage(page + 1)}
+						style={{
+							padding: "10px 20px",
+							margin: "0 10px",
+							fontSize: "16px",
+							backgroundColor: "#F9DF85",
+							border: "none",
+							borderRadius: "5px",
+						}}>
+						Next
+					</button>
+				</div>
+
+				<span style={{ fontSize: "16px" }}>Per Page: {perPage}</span>
 			</div>
 		</div>
 	);
 }
+
+const headerCellStyle = {
+	padding: "15px",
+	fontSize: "16px",
+	fontWeight: "bold",
+	color: "#333",
+	borderBottom: "2px solid #EEE",
+};
+
+const cellStyle = {
+	padding: "15px",
+	textAlign: "center",
+	borderBottom: "1px solid #EEE",
+	color: "#333",
+};
+
+const rowStyle = {
+	backgroundColor: "#FFF5C4",
+};
 
 export default TransactionDashboard;
